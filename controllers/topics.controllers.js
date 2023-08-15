@@ -1,13 +1,21 @@
-const express = require('express');
-const app = express();
+
+const {fetchTopics} = require("../models/topics.model")
+
+const getTopics = (request, response, next) => {
+
+  fetchTopics()
+  .then((topics)=>{response.status(200)
+  .send(topics)
+  })
+  
+.catch((err)=>{
+  console.log(err)
+  next(err);
+})
+}
 
 
-const topicData = require('../db/data/development-data/topics');
 
-const getTopics = app.get('/api/topics', (req, res) => {
-  const topics = topicData;
-  return res.status(200).send(topics);
-});
 
-module.exports = getTopics
+module.exports = {getTopics}
 
