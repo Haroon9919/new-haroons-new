@@ -21,6 +21,7 @@ describe("app testing", () => {
         .then((response) => {
           const topics = response.body;
           expect(topics).toBeInstanceOf(Array);
+          expect(topics.length).toBe(3);
           return topics.forEach((topic) => {
             expect(topic).toHaveProperty("slug");
             expect(topic).toHaveProperty("description");
