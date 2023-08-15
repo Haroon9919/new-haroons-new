@@ -37,13 +37,19 @@ describe("errors", () => {
   });
 });
 
-test("GET 200 AND return a JSON object ith the endpoints and status 200", () => {
-  return request(app)
-    .get("/api")
-    .expect(200)
-    .then((response) => {
-      const responseBody = JSON.parse(response.text);
-
-      expect(typeof responseBody).toBe("object");
-    });
+describe("/api endpoints", () => {
+  test("GET 200 AND return a JSON object with the endpoints each of which has the correct properties with status 200", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const responseBody = JSON.parse(response.text);
+        const endPoints = Object.keys(responseBody);
+        for (i = 1; i < endPoints.length; i++) {
+          expect(responseBody[endPoints[i]]).toHaveProperty("description");
+          expect(responseBody[endPoints[i]]).toHaveProperty("queries");
+          expect(responseBody[endPoints[i]]).toHaveProperty("exampleResponse");
+        }
+      });
+  });
 });
