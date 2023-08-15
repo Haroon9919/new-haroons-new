@@ -36,3 +36,14 @@ describe("errors", () => {
     return request(app).get("/api/toepics").expect(404);
   });
 });
+
+test("GET 200 AND return a JSON object ith the endpoints and status 200", () => {
+  return request(app)
+    .get("/api")
+    .expect(200)
+    .then((response) => {
+      const responseBody = JSON.parse(response.text);
+
+      expect(typeof responseBody).toBe("object");
+    });
+});
