@@ -20,11 +20,6 @@ app.use((err, req, res, next) => {
   } else next(err);
 });
 
-app.use((err, req, res, next) => {
-  if (err.status===400 && err.msg==="Bad Request") {
-    res.status(400).send("Bad Request");
-  } else next(err);
-});
 
 app.use((err, req, res, next) => {
   console.log(err);

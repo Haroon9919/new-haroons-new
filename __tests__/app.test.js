@@ -54,35 +54,39 @@ describe("/api endpoints", () => {
   });
 });
 
-describe("/api/articles", () => {
+describe("/api/articles/:articles_id", () => {
   test("GET 200 AND return the correct article object with the correct properties and status 200", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
       .then((response) => {
         const { article } = response.body;
-        expect(article).toHaveProperty("author");
-        expect(article).toHaveProperty("title");
-        expect(article).toHaveProperty("article_id");
-        expect(article).toHaveProperty("body");
-        expect(article).toHaveProperty("topic");
-        expect(article).toHaveProperty("created_at");
-        expect(article).toHaveProperty("votes");
-        expect(article).toHaveProperty("article_img_url");
+        expect(article).toMatchObject({
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: "2020-07-09T20:11:00.000Z",
+            votes: 100,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          });
+        });
+        
       });
   });
 
-  test('404 - responds with "Not Found" for non-existent id', () => {
+  test('404 - responds with undefined for non-existent id', () => {
     return request(app)
       .get("/api/articles/12334404")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe();
-        console.log("error 404 article not found")
+        
       });
   });
 
-  test("400 - responds with error when id is NaN", () => {
+  test("400 - responds with error when id is not a number", () => {
     return request(app)
       .get("/api/articles/bosh")
       .expect(400)
@@ -90,4 +94,4 @@ describe("/api/articles", () => {
         expect(body.msg).toBe("Invalid Input");
       });
   });
-});
+
