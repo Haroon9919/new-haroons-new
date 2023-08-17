@@ -76,12 +76,12 @@ describe("/api/articles/:articles_id", () => {
       });
   });
 
-  test('404 - responds with undefined for non-existent id', () => {
+  test('404 - responds with Not Found for non-existent id', () => {
     return request(app)
       .get("/api/articles/12334404")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe();
+        expect(body.msg).toBe("Not Found");
         
       });
   });

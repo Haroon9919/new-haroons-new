@@ -10,7 +10,8 @@ app.get("/api/articles/:article_id", getArticleId);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
-    res.status(err.status).send(err.msg);
+    
+    res.status(err.status).send({msg: err.msg});
   } else next(err);
 });
 
@@ -20,10 +21,9 @@ app.use((err, req, res, next) => {
   } else next(err);
 });
 
-
 app.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).send("Internal server error");
+ 
+  res.status(500).send({msg: "Internal server error"});
 });
 
 module.exports = app;

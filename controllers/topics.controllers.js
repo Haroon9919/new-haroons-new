@@ -9,7 +9,7 @@ const getTopics = (request, response, next) => {
   })
   
 .catch((err)=>{
-  console.log(err)
+
   next(err);
 })
 }
