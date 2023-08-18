@@ -94,34 +94,42 @@ test("400 - responds with error when id is not a number", () => {
 });
 
 describe("GET api/articles", () => {
-  test("200 - repsonds with an article with the correct properties", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then(({ body }) => {
-        body.forEach((article) => {
-          expect(article).toHaveProperty("author");
-          expect(article).toHaveProperty("title");
-          expect(article).toHaveProperty("article_id");
-          expect(article).toHaveProperty("topic");
-          expect(article).toHaveProperty("created_at");
-          expect(article).toHaveProperty("votes");
-          expect(article).toHaveProperty("article_img_url");
-          expect(article).toHaveProperty("counter");
-          expect(article).not.toHaveProperty("body");
+    test("200 - responds with articles with the correct properties", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles; 
+          expect(articles.length).toBe(13);
+          articles.forEach((article) => {
+            expect(article).toHaveProperty("author");
+            expect(article).toHaveProperty("title");
+            expect(article).toHaveProperty("article_id");
+            expect(article).toHaveProperty("topic");
+            expect(article).toHaveProperty("created_at");
+            expect(article).toHaveProperty("votes");
+            expect(article).toHaveProperty("article_img_url");
+            expect(article).toHaveProperty("comment_counter");
+            expect(article).not.toHaveProperty("body");
+         
+           
+          });
         });
-      });
-  });
-  test("should return in descending order", () => {
-    return request(app)
-      .get("/api/articles")
-      .expect(200)
-      .then(({ body }) => {
-        for (let i = 1; i < body.length; i++) {
-          const firstDate = new Date(body[i - 1].created_at);
-          const secondDate = new Date(body[i].created_at);
-          expect(secondDate.getTime()).toBeLessThanOrEqual(firstDate.getTime());
-        }
-      });
-  });
-});
+    });
+  
+    test("should return articles in descending order", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+          const articles = body.articles;
+          for (let i = 1; i < body.length; i++) {
+            const firstDate = new Date(articles[i - 1].created_at);
+            const secondDate = new Date(articles[i].created_at);
+            expect(secondDate.getTime()).toBeLessThanOrEqual(firstDate.getTime());
+          }
+          });
+        });
+    });
+  
+  

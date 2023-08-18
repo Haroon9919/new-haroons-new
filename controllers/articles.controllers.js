@@ -15,7 +15,7 @@ const getArticleById = (request, response, next) => {
 const getAllArticles = (request, response, next) => {
   fetchAllArticles()
     .then((articles) => {
-      response.status(200).send(articles);
+      response.status(200).send({articles});
     })
     .catch((err) => {
       next(err);
