@@ -62,36 +62,66 @@ describe("/api/articles/:articles_id", () => {
       .then((response) => {
         const { article } = response.body;
         expect(article).toMatchObject({
-            title: "Living in the shadow of a great man",
-            topic: "mitch",
-            author: "butter_bridge",
-            body: "I find this existence challenging",
-            created_at: "2020-07-09T20:11:00.000Z",
-            votes: 100,
-            article_img_url:
-              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-          });
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         });
-        
       });
   });
+});
 
-  test('404 - responds with Not Found for non-existent id', () => {
+test("404 - responds with Not Found for non-existent id", () => {
+  return request(app)
+    .get("/api/articles/12334404")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found");
+    });
+});
+
+test("400 - responds with error when id is not a number", () => {
+  return request(app)
+    .get("/api/articles/bosh")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Invalid Input");
+    });
+});
+
+describe("GET api/articles", () => {
+  test("200 - repsonds with an article with the correct properties", () => {
     return request(app)
-      .get("/api/articles/12334404")
-      .expect(404)
+      .get("/api/articles")
+      .expect(200)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-        
+        body.forEach((article) => {
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+          expect(article).toHaveProperty("counter");
+          expect(article).not.toHaveProperty("body");
+        });
       });
   });
-
-  test("400 - responds with error when id is not a number", () => {
+  test("should return in descending order", () => {
     return request(app)
-      .get("/api/articles/bosh")
-      .expect(400)
+      .get("/api/articles")
+      .expect(200)
       .then(({ body }) => {
-        expect(body.msg).toBe("Invalid Input");
+        for (let i = 1; i < body.length; i++) {
+          const firstDate = new Date(body[i - 1].created_at);
+          const secondDate = new Date(body[i].created_at);
+          expect(secondDate.getTime()).toBeLessThanOrEqual(firstDate.getTime());
+        }
       });
   });
-
+});

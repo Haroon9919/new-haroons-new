@@ -1,5 +1,5 @@
 
-const {fetchTopics} = require("../models/topics.model")
+const fetchTopics = require("../models/topics.model")
 
 const getTopics = (request, response, next) => {
 
@@ -14,8 +14,10 @@ const getTopics = (request, response, next) => {
 })
 }
 
-
-
-
 module.exports = {getTopics}
+
+
+
+
+
 
