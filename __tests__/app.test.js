@@ -250,5 +250,73 @@ test('status:400, responds with an error message when passed a username that doe
           expect(response.status).toBe(400);
           expect(response.body).toEqual({
             msg: "Invalid input"})})})
+
+
+
     
-    
+            describe(('PATCH /api/articles/:article_id'), () => {
+              test('status 200 : increments vote by 1', () => {
+                  return request(app)
+                  .patch('/api/articles/1')
+                  .send({ inc_votes: 1 })
+                  .expect(200)
+                  .then(({body}) => {
+                      expect(body.article.votes).toBe(101);
+                  });
+              });
+              test('status 400, responds with error message when passed an article_id that does not exisit', ()=>{
+                return request(app)
+                .get('/api/articles/6000')
+                .expect(404)
+                .then(({ body })=>{
+                  expect(body.msg).toBe('Not Found')
+                })
+              })
+            
+            
+                test('should return a 404 status if the article ID does not exist', async () => {
+                  const response = await request(app)
+                    .patch('/api/articles/9000000') 
+                    .send({ inc_votes: 1 });
+              
+                  expect(response.status).toBe(404);
+                  expect(response.body).toEqual({ msg: 'Not Found' }); 
+                });
+                test('should return a 400 status if the article ID is not in the correct datatype', async () => {
+                  const response = await request(app)
+                    .patch('/api/articles/Badger') 
+                    .send({ inc_votes: 1 });
+              
+                  expect(response.status).toBe(400);
+                  expect(response.body).toEqual({ msg: 'Invalid Input' }); 
+                });
+         
+           
+  test("Votes field should be a number", async () => {
+    const wrongVotes = "ivkvvkv";
+    const response = await request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "Some comment", votes: wrongVotes });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ msg: "Invalid input" })
+  })
+  test('should return a 400 status if the request body is empty', async () => {
+    const response = await request(app)
+      .patch('/api/articles/1') 
+      .send({}); 
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ msg: 'Invalid vote' }); 
+});
+
+test('should decrease the vote count when inc_votes is a negative number', async () => {
+  const response = await request(app)
+    .patch('/api/articles/1')
+    .send({ inc_votes: -3 });
+
+  expect(response.status).toBe(200);
+  expect(response.body.article.votes).toBe(97); 
+});
+});
+            

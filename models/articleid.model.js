@@ -41,4 +41,18 @@ const fetchCommentsByArticleId = (article_id) => {
       return rows
   })
 }
-module.exports = { fetchAllArticles, fetchArticleById, fetchCommentsByArticleId};
+
+const updateArticleVotes = (article_id, inc_votes) => {
+
+  const queryString = 
+      `UPDATE articles
+      SET votes = votes + ${inc_votes}
+      WHERE article_id = ${article_id}
+      RETURNING *;`
+ 
+  return db.query(queryString)
+  .then(result => {
+      return result.rows[0];
+  });
+};
+module.exports = { fetchAllArticles, fetchArticleById, fetchCommentsByArticleId, updateArticleVotes};
