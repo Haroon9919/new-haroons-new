@@ -6,6 +6,8 @@ const {getArticleById, getAllArticles, getCommentsByArticleId, patchArticleVotes
 const {postCommentById} = require("./controllers/comments.controllers")
 const cors = require('cors');
 
+app.use(cors());
+
 
 app.use(express.json());
 
@@ -16,8 +18,6 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 app.post('/api/articles/:article_id/comments', postCommentById)
 app.patch('/api/articles/:article_id', patchArticleVotes);
-
-app.use(cors());
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
