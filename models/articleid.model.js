@@ -1,5 +1,4 @@
 const db = require("../db/connection");
-
 const fetchArticleById = (article_id) => {
   return db
 
